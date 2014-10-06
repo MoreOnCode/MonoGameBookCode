@@ -22,17 +22,20 @@ namespace SpaceGame
 		// reference our spaceship
 		protected Texture2D texShip;
 
-		// NEW: our ship's location
+		// our ship's location
 		protected Vector2 locShip = Vector2.Zero;
 
-		// NEW: reference our starfield
+		// reference our starfield
 		protected Texture2D texStars;
 
-		// NEW: our background's location
+		// our background's location
 		protected Vector2 locStars = Vector2.Zero;
 
-		// NEW: screen resolution
+		// screen resolution
 		protected Rectangle rectViewBounds = Rectangle.Empty;
+
+		// NEW: player bounds
+		protected Rectangle rectPlayerBounds = Rectangle.Empty;
 
         public SpaceGame()
         {
@@ -65,17 +68,24 @@ namespace SpaceGame
 			// load our spaceship image
 			texShip = Content.Load<Texture2D> ("playerShip1_red");
 
-			// NEW: load our spacey background
+			// load our space background
 			texStars = Content.Load<Texture2D> ("purple");
 
-			// NEW: screen bounds
+			// screen bounds
 			rectViewBounds = graphics.GraphicsDevice.Viewport.Bounds;
 
-			// NEW: start ship in center of screen
-			locShip.X = rectViewBounds.Width / 2 - texShip.Bounds.Width / 2;
-			locShip.Y = rectViewBounds.Height / 2 - texShip.Bounds.Height / 2;
+			// NEW: player bounds
+			rectPlayerBounds = rectViewBounds;
+			rectPlayerBounds.X = 10;
+			rectPlayerBounds.Width = rectViewBounds.Width - 10 * 2;
+			rectPlayerBounds.Y = rectViewBounds.Height / 3;
+			rectPlayerBounds.Height = rectViewBounds.Height - rectPlayerBounds.Top - 10;
 
-			// NEW: start stars off screen
+			// NEW: start ship at center, bottom of screen
+			locShip.X = rectViewBounds.Width / 2 - texShip.Bounds.Width / 2;
+			locShip.Y = rectViewBounds.Height - texShip.Bounds.Height - 10.0f;
+
+			// start stars off screen
 			locStars.Y = -texStars.Bounds.Height;
         }
 
@@ -85,7 +95,7 @@ namespace SpaceGame
 			if (gamepad1.IsButtonDown (Buttons.Back)) {
 				this.Exit ();
 			} else {
-				// NEW: move the ship
+				// move the ship
 				var elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 				var dX = 
 					gamepad1.ThumbSticks.Left.X +
@@ -96,7 +106,23 @@ namespace SpaceGame
 				locShip.X += dX * SPEED_SHIP * elapsed;
 				locShip.Y -= dY * SPEED_SHIP * elapsed;
 
-				// NEW: move the stars
+				// NEW: keep ship in bounds (Horizontal)
+				var maxX = rectPlayerBounds.Right - texShip.Bounds.Width;
+				if (locShip.X < rectPlayerBounds.X) {
+					locShip.X = rectPlayerBounds.X;
+				} else if(locShip.X > maxX) {
+					locShip.X = maxX;
+				}
+
+				// NEW: keep ship in bounds (Vertical)
+				var maxY = rectPlayerBounds.Bottom - texShip.Bounds.Height;
+				if (locShip.Y < rectPlayerBounds.Y) {
+					locShip.Y = rectPlayerBounds.Y;
+				} else if(locShip.Y > maxY) {
+					locShip.Y = maxY;
+				}
+
+				// move the stars
 				locStars.Y += SPEED_STARS * elapsed;
 				if (locStars.Y >= 0.0f) {
 					locStars.Y = -texStars.Bounds.Height;
@@ -110,10 +136,18 @@ namespace SpaceGame
 			graphics.GraphicsDevice.Clear (Color.CornflowerBlue);
 			spriteBatch.Begin ();
 
-			// NEW: draw our space image at current location
-			spriteBatch.Draw (texStars, locStars, Color.White);
+			// NEW: draw our space image at current location, filling screen
+			var loc = locStars;
+			while (loc.Y < rectViewBounds.Bottom) {
+				loc.X = 0.0f;
+				while (loc.X < rectViewBounds.Right) {
+					spriteBatch.Draw (texStars, loc, Color.White);
+					loc.X += texStars.Bounds.Width;
+				}
+				loc.Y += texStars.Bounds.Height;
+			}
 
-			// NEW: draw our spaceship image at current location
+			// draw our spaceship image at current location
 			spriteBatch.Draw (texShip, locShip, Color.White);
 
 			spriteBatch.End ();
