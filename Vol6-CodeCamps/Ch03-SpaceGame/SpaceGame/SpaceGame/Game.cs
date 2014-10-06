@@ -15,8 +15,12 @@ namespace SpaceGame
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
-		// NEW: reference our spaceship
+		// reference our spaceship
 		protected Texture2D texShip;
+
+		// NEW: our ship's location
+		protected Vector2 locShipStart = Vector2.One * 100.0f;
+		protected Vector2 locShipDelta = Vector2.Zero;
 
         public SpaceGame()
         {
@@ -46,7 +50,7 @@ namespace SpaceGame
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			// NEW: load our spaceship image
+			// load our spaceship image
 			texShip = Content.Load<Texture2D> ("playerShip1_red");
         }
 
@@ -56,7 +60,9 @@ namespace SpaceGame
 			if (gamepad1.IsButtonDown (Buttons.Back)) {
 				this.Exit ();
 			} else {
-				// TODO: update game objects here
+				// NEW: move the ship
+				var dX = (float)Math.Sin(gameTime.TotalGameTime.TotalSeconds);
+				locShipDelta.X = 75.0f * dX;
 			}
             base.Update(gameTime);
         }
@@ -66,8 +72,11 @@ namespace SpaceGame
 			graphics.GraphicsDevice.Clear (Color.CornflowerBlue);
 			spriteBatch.Begin ();
 
-			// NEW: draw our spaceship image
-			spriteBatch.Draw (texShip, Vector2.One * 100.0f, Color.White);
+			// NEW: draw our spaceship image at current location
+			spriteBatch.Draw (
+				texShip, 
+				locShipStart + locShipDelta, 
+				Color.White);
 
 			spriteBatch.End ();
 			base.Draw (gameTime);
