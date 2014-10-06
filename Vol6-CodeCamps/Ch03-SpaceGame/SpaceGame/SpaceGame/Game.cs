@@ -21,19 +21,19 @@ namespace SpaceGame
 		protected const float SPEED_METEOR = 40.0f;
 		protected const float SPEED_LASER = 90.0f;
 
-		// NEW: reference our enemy ship
+		// reference our enemy ship
 		protected Texture2D texEnemyShip;
 
-		// NEW: enemy ships' locations
+		// enemy ships' locations
 		protected List<Vector3> locEnemyShips = new List<Vector3>();
 
-		// NEW: reference to enemy laser
+		// reference to enemy laser
 		protected Texture2D texEnemyLaser;
 
-		// NEW: our enemy lasers' locations
+		// our enemy lasers' locations
 		protected List<Vector2> locEnemyLasers = new List<Vector2> ();
 
-		// NEW: enemy travel lanes
+		// enemy travel lanes
 		protected Vector2 locStartEnemyRight = Vector2.Zero;
 		protected Vector2 locStartEnemyLeft = Vector2.Zero;
 
@@ -121,10 +121,10 @@ namespace SpaceGame
 			texShipDamage.Add(Content.Load<Texture2D> ("ship/playerShip1_damage2"));
 			texShipDamage.Add(Content.Load<Texture2D> ("ship/playerShip1_damage3"));
 
-			// NEW: load enemy ship
+			// load enemy ship
 			texEnemyShip = Content.Load<Texture2D> ("enemy/enemyBlack3");
 
-			// NEW: load enemy laser
+			// load enemy laser
 			texEnemyLaser = Content.Load<Texture2D> ("enemy/laserBlue01");
 
 			// screen bounds
@@ -144,7 +144,7 @@ namespace SpaceGame
 			// start stars off screen
 			locStars.Y = -texStars.Bounds.Height;
 
-			// NEW: enemy ship starting locations
+			// enemy ship starting locations
 			locStartEnemyRight.X = rectViewBounds.Right - 1;
 			locStartEnemyRight.Y = 
 				rectViewBounds.Height / 9 - 
@@ -160,7 +160,7 @@ namespace SpaceGame
 		protected const float METEOR_DELAY = 3.0f;
 		protected float meteorElapsed = METEOR_DELAY;
 
-		// NEW: time between enemy creation
+		// time between enemy creation
 		protected const float ENEMY_DELAY = 5.0f;
 		protected float enemyElapsed = ENEMY_DELAY;
 		protected bool isEnemyLeft = true;
@@ -173,7 +173,7 @@ namespace SpaceGame
 		protected float laserDelay = INIT_LASER_DELAY;
 		protected float laserElapsed = INIT_LASER_DELAY;
 
-		// NEW: time between enemy shots
+		// time between enemy shots
 		protected const float INIT_ENEMY_LASER_DELAY = 3.25f;
 
         protected override void Update(GameTime gameTime)
@@ -215,7 +215,7 @@ namespace SpaceGame
 					locStars.Y = -texStars.Bounds.Height;
 				}
 
-				// NEW: add a new enemy?
+				// add a new enemy?
 				enemyElapsed += elapsed;
 				if (enemyElapsed >= ENEMY_DELAY) {
 					var locEnemy = new Vector3(locStartEnemyLeft, 0.0f);
@@ -227,7 +227,7 @@ namespace SpaceGame
 					isEnemyLeft = !isEnemyLeft;
 				}
 
-				// NEW: update existing enemies
+				// update existing enemies
 				for (int i = 0; i < locEnemyShips.Count; i++) {
 					var loc = locEnemyShips [i];
 					if (loc.Y == locStartEnemyLeft.Y) {
@@ -238,7 +238,7 @@ namespace SpaceGame
 					locEnemyShips [i] = loc;
 				}
 
-				// UPDATED: add a new meteor?
+				// add a new meteor?
 				meteorElapsed += elapsed;
 				if (meteorElapsed >= METEOR_DELAY) {
 					var iMeteor = rand.Next (texMeteors.Count);
@@ -281,7 +281,7 @@ namespace SpaceGame
 					locLasers [i] = loc;
 				}
 
-				// NEW: add a new laser?
+				// add a new enemy laser?
 				for (int i = 0; i < locEnemyShips.Count; i++) {
 					var loc = locEnemyShips [i];
 					loc.Z += elapsed;
@@ -296,20 +296,21 @@ namespace SpaceGame
 					locEnemyShips [i] = loc;
 				}
 
-				// NEW: update existing enemy lasers
+				// update existing enemy lasers
 				for (int i = 0; i < locEnemyLasers.Count; i++) {
 					var loc = locEnemyLasers [i];
 					loc.Y += elapsed * SPEED_LASER;
 					locEnemyLasers [i] = loc;
 				}
 
-				// NEW: check for collisions
+				// check for collisions
 				CheckForCollisions ();
+				DoHousekeeping ();
 			}
             base.Update(gameTime);
         }
 
-		// NEW: check for collisions
+		// check for collisions
 		protected void CheckForCollisions () {
 
 			// --------------------
@@ -373,7 +374,7 @@ namespace SpaceGame
 			}
 
 			// --------------------
-			// NEW: ship hit by laser?
+			// ship hit by laser?
 			// --------------------
 
 			// check all laser instances
@@ -394,7 +395,7 @@ namespace SpaceGame
 			}
 
 			// --------------------
-			// NEW: enemy hit by laser?
+			// enemy hit by laser?
 			// --------------------
 
 			var rectEnemy = Rectangle.Empty;
@@ -426,6 +427,52 @@ namespace SpaceGame
 			}
 		}
 
+		// NEW: remove unused objects
+		protected void DoHousekeeping () {
+			// our lasers
+			var rect = texLaser.Bounds;
+			for (int i = 0; i < locLasers.Count; i++) {
+				rect.X = (int)locLasers [i].X;
+				rect.Y = (int)locLasers [i].Y;
+				if (!rectViewBounds.Intersects (rect)) {
+					locLasers.RemoveAt (i);
+					i--;
+				}
+			}
+
+			// enemy lasers
+			rect = texEnemyLaser.Bounds;
+			for (int i = 0; i < locEnemyLasers.Count; i++) {
+				rect.X = (int)locEnemyLasers [i].X;
+				rect.Y = (int)locEnemyLasers [i].Y;
+				if (!rectViewBounds.Intersects (rect)) {
+					locEnemyLasers.RemoveAt (i);
+					i--;
+				}
+			}
+
+			// enemy ships
+			rect = texEnemyShip.Bounds;
+			for (int i = 0; i < locEnemyShips.Count; i++) {
+				rect.X = (int)locEnemyShips [i].X;
+				rect.Y = (int)locEnemyShips [i].Y;
+				if (!rectViewBounds.Intersects (rect)) {
+					locEnemyShips.RemoveAt (i);
+					i--;
+				}
+			}
+
+			// meteors
+			for (int i = 0; i < locMeteors.Count; i++) {
+				rect = texMeteors[(int)locMeteors[i].Z].Bounds;
+				rect.X = (int)locMeteors [i].X;
+				rect.Y = (int)locMeteors [i].Y;
+				if (!rectViewBounds.Intersects (rect)) {
+					locMeteors.RemoveAt (i);
+					i--;
+				}
+			}
+		}
 
         protected override void Draw(GameTime gameTime)
 		{
@@ -469,12 +516,12 @@ namespace SpaceGame
 					Color.White);
 			}
 
-			// NEW: draw enemy lasers
+			// draw enemy lasers
 			for (int i = 0; i < locEnemyLasers.Count; i++) {
 				spriteBatch.Draw (texEnemyLaser, locEnemyLasers[i], Color.White);
 			}
 
-			// NEW: draw enemy ships
+			// draw enemy ships
 			for (int i = 0; i < locEnemyShips.Count; i++) {
 				loc = new Vector2 (locEnemyShips [i].X, locEnemyShips [i].Y);
 				spriteBatch.Draw (texEnemyShip, loc, Color.White);
