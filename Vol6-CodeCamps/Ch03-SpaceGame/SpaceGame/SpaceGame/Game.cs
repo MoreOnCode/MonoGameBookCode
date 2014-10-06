@@ -19,12 +19,19 @@ namespace SpaceGame
 		protected const float SPEED_STARS = 20.0f;
 		protected const float SPEED_SHIP = 75.0f;
 		protected const float SPEED_METEOR = 40.0f;
+		protected const float SPEED_LASER = 90.0f;
 
 		// reference our spaceship
 		protected Texture2D texShip;
 
 		// our ship's location
 		protected Vector2 locShip = Vector2.Zero;
+
+		// NEW: references for ship damage sprites
+		protected List<Texture2D> texShipDamage = new List<Texture2D> ();
+
+		// NEW: ship damaged?
+		protected int shipDamageLevel = -1;
 
 		// reference our starfield
 		protected Texture2D texStars;
@@ -38,11 +45,17 @@ namespace SpaceGame
 		// player bounds
 		protected Rectangle rectPlayerBounds = Rectangle.Empty;
 
-		// NEW: reference to meteors
+		// reference to meteors
 		protected List<Texture2D> texMeteors = new List<Texture2D> ();
 
-		// NEW: our meteors' locations
+		// our meteors' locations
 		protected List<Vector3> locMeteors = new List<Vector3> ();
+
+		// NEW: reference to lasers
+		protected Texture2D texLaser;
+
+		// NEW: our lasers' locations
+		protected List<Vector2> locLasers = new List<Vector2> ();
 
         public SpaceGame()
         {
@@ -78,11 +91,19 @@ namespace SpaceGame
 			// load our space background
 			texStars = Content.Load<Texture2D> ("purple");
 
-			// NEW: load our meteors
+			// load our meteors
 			texMeteors.Add (Content.Load<Texture2D> ("meteor/meteorBrown_big1"));
 			texMeteors.Add (Content.Load<Texture2D> ("meteor/meteorBrown_big2"));
 			texMeteors.Add (Content.Load<Texture2D> ("meteor/meteorBrown_big3"));
 			texMeteors.Add (Content.Load<Texture2D> ("meteor/meteorBrown_big4"));
+
+			// NEW: load our laser
+			texLaser = Content.Load<Texture2D> ("ship/laserRed01");
+
+			// NEW: load our ship damage sprites
+			texShipDamage.Add(Content.Load<Texture2D> ("ship/playerShip1_damage1"));
+			texShipDamage.Add(Content.Load<Texture2D> ("ship/playerShip1_damage2"));
+			texShipDamage.Add(Content.Load<Texture2D> ("ship/playerShip1_damage3"));
 
 			// screen bounds
 			rectViewBounds = graphics.GraphicsDevice.Viewport.Bounds;
@@ -102,12 +123,17 @@ namespace SpaceGame
 			locStars.Y = -texStars.Bounds.Height;
         }
 
-		// NEW: time between meteor creation
+		// time between meteor creation
 		protected const float METEOR_DELAY = 3.0f;
 		protected float meteorElapsed = METEOR_DELAY;
 
-		// NEW: random meteor placement
+		// random meteor placement
 		protected Random rand = new Random ();
+
+		// NEW: time between laser shots
+		protected const float INIT_LASER_DELAY = 1.0f;
+		protected float laserDelay = INIT_LASER_DELAY;
+		protected float laserElapsed = INIT_LASER_DELAY;
 
         protected override void Update(GameTime gameTime)
         {
@@ -148,7 +174,7 @@ namespace SpaceGame
 					locStars.Y = -texStars.Bounds.Height;
 				}
 
-				// NEW: add a new meteor?
+				// add a new meteor?
 				meteorElapsed += elapsed;
 				if (meteorElapsed >= METEOR_DELAY) {
 					var meteorWidth = texMeteors [0].Bounds.Width;
@@ -163,15 +189,103 @@ namespace SpaceGame
 					meteorElapsed = 0.0f;
 				}
 
-				// NEW: update existing meteors
+				// update existing meteors
 				for (int i = 0; i < locMeteors.Count; i++) {
 					var loc = locMeteors [i];
 					loc.Y += elapsed * SPEED_METEOR;
 					locMeteors [i] = loc;
 				}
+
+				// NEW: add a new laser?
+				laserElapsed += elapsed;
+				if (gamepad1.IsButtonDown (Buttons.A)) {
+					if (laserElapsed >= laserDelay) {
+						var loc =
+							new Vector2 (
+								locShip.X + texShip.Width / 2 - texLaser.Width / 2,
+								locShip.Y);
+						locLasers.Add (loc);
+						laserElapsed = 0.0f;
+					}
+				}
+
+				// NEW: update existing lasers
+				for (int i = 0; i < locLasers.Count; i++) {
+					var loc = locLasers [i];
+					loc.Y -= elapsed * SPEED_LASER;
+					locLasers [i] = loc;
+				}
+
+				// NEW: check for collisions
+				CheckForCollisions ();
 			}
             base.Update(gameTime);
         }
+
+		// NEW: check for collisions
+		protected void CheckForCollisions () {
+
+			// --------------------
+			// meteor hit by laser?
+			// --------------------
+
+			var rectMeteor = Rectangle.Empty;
+			var rectLaser = texLaser.Bounds;
+
+			// check all meteor instances
+			for (int iMeteor = 0; iMeteor < locMeteors.Count; iMeteor++) {
+				// create a rectangle, current location and size of meteor
+				var locMeteor = locMeteors [iMeteor];
+				rectMeteor = texMeteors [(int)locMeteor.Z].Bounds;
+				rectMeteor.X = (int)locMeteor.X;
+				rectMeteor.Y = (int)locMeteor.Y;
+
+				// check all laser instances
+				for (int iLaser = 0; iLaser < locLasers.Count; iLaser++) {
+					// create a rectangle, current location and size of laser
+					var locLaser = locLasers [iLaser];
+					rectLaser.X = (int)locLaser.X;
+					rectLaser.Y = (int)locLaser.Y;
+
+					// does laser touch meteor?
+					if (rectLaser.Intersects (rectMeteor)) {
+						locMeteors.RemoveAt (iMeteor);
+						iMeteor--;
+						locLasers.RemoveAt (iLaser);
+						iLaser--;
+						break;
+					}
+				}
+			}
+
+			// --------------------
+			// ship hit by meteor?
+			// --------------------
+
+			rectMeteor = Rectangle.Empty;
+			var rectShip = texShip.Bounds;
+			rectShip.X = (int)locShip.X;
+			rectShip.Y = (int)locShip.Y;
+
+			// check all meteor instances
+			for (int iMeteor = 0; iMeteor < locMeteors.Count; iMeteor++) {
+				// create a rectangle, current location and size of meteor
+				var locMeteor = locMeteors [iMeteor];
+				rectMeteor = texMeteors [(int)locMeteor.Z].Bounds;
+				rectMeteor.X = (int)locMeteor.X;
+				rectMeteor.Y = (int)locMeteor.Y;
+
+				// does meteor touch ship?
+				if (rectShip.Intersects (rectMeteor)) {
+					locMeteors.RemoveAt (iMeteor);
+					iMeteor--;
+					shipDamageLevel = 
+						Math.Min (texShipDamage.Count - 1, shipDamageLevel + 1);
+					break;
+				}
+			}
+		}
+
 
         protected override void Draw(GameTime gameTime)
 		{
@@ -189,10 +303,23 @@ namespace SpaceGame
 				loc.Y += texStars.Bounds.Height;
 			}
 
+			// NEW: draw lasers
+			for (int i = 0; i < locLasers.Count; i++) {
+				spriteBatch.Draw (texLaser, locLasers [i], Color.White);
+			}
+
 			// draw our spaceship image at current location
 			spriteBatch.Draw (texShip, locShip, Color.White);
 
-			// NEW: draw meteors
+			// NEW: draw ship damage, if any
+			if (shipDamageLevel >= 0) {
+				spriteBatch.Draw (
+					texShipDamage[shipDamageLevel], 
+					locShip, 
+					Color.White);
+			}
+
+			// draw meteors
 			for (int i = 0; i < locMeteors.Count; i++) {
 				var locMeteor = locMeteors [i];
 				var iTexture = (int)locMeteor.Z;
