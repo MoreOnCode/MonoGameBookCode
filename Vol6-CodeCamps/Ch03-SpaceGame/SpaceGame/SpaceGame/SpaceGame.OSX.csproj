@@ -81,6 +81,7 @@
     <Folder Include="MoreOnCode\Input\" />
     <Folder Include="Content\meteor\" />
     <Folder Include="Content\ship\" />
+    <Folder Include="Content\enemy\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainWindow.cs" />
@@ -124,6 +125,10 @@
     <Content Include="Content\meteor\meteorBrown_small2.png" />
     <Content Include="Content\meteor\meteorBrown_tiny1.png" />
     <Content Include="Content\meteor\meteorBrown_tiny2.png" />
+    <Content Include="Content\enemy\enemyBlack1.png" />
+    <Content Include="Content\enemy\enemyBlack2.png" />
+    <Content Include="Content\enemy\enemyBlack3.png" />
+    <Content Include="Content\enemy\laserBlue01.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\LogoOnly.icns" />
