@@ -105,7 +105,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Content Include="Content\SuperJoe.png" />
+    <Content Include="Content\purple.png" />
+    <Content Include="Content\playerShip1_red.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\LogoOnly.icns" />

@@ -15,6 +15,9 @@ namespace SpaceGame
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
+		// NEW: reference our spaceship
+		protected Texture2D texShip;
+
         public SpaceGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -42,6 +45,9 @@ namespace SpaceGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+			// NEW: load our spaceship image
+			texShip = Content.Load<Texture2D> ("playerShip1_red");
         }
 
         protected override void Update(GameTime gameTime)
@@ -59,7 +65,10 @@ namespace SpaceGame
 		{
 			graphics.GraphicsDevice.Clear (Color.CornflowerBlue);
 			spriteBatch.Begin ();
-			// TODO: draw stuff here
+
+			// NEW: draw our spaceship image
+			spriteBatch.Draw (texShip, Vector2.One * 100.0f, Color.White);
+
 			spriteBatch.End ();
 			base.Draw (gameTime);
 		}
