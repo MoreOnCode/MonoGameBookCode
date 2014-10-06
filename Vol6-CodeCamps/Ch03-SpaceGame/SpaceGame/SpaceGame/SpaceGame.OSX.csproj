@@ -79,6 +79,8 @@
     <Folder Include="MoreOnCode\" />
     <Folder Include="Content\" />
     <Folder Include="MoreOnCode\Input\" />
+    <Folder Include="Content\meteor\" />
+    <Folder Include="Content\ship\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainWindow.cs" />
@@ -106,7 +108,22 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Content Include="Content\purple.png" />
-    <Content Include="Content\playerShip1_red.png" />
+    <Content Include="Content\ship\laserRed01.png" />
+    <Content Include="Content\ship\playerShip1_damage1.png" />
+    <Content Include="Content\ship\playerShip1_damage2.png" />
+    <Content Include="Content\ship\playerShip1_damage3.png" />
+    <Content Include="Content\ship\playerShip1_red.png" />
+    <Content Include="Content\ship\shield1.png" />
+    <Content Include="Content\meteor\meteorBrown_big1.png" />
+    <Content Include="Content\meteor\meteorBrown_big2.png" />
+    <Content Include="Content\meteor\meteorBrown_big3.png" />
+    <Content Include="Content\meteor\meteorBrown_big4.png" />
+    <Content Include="Content\meteor\meteorBrown_med1.png" />
+    <Content Include="Content\meteor\meteorBrown_med3.png" />
+    <Content Include="Content\meteor\meteorBrown_small1.png" />
+    <Content Include="Content\meteor\meteorBrown_small2.png" />
+    <Content Include="Content\meteor\meteorBrown_tiny1.png" />
+    <Content Include="Content\meteor\meteorBrown_tiny2.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\LogoOnly.icns" />

@@ -18,6 +18,7 @@ namespace SpaceGame
 		// speed constants
 		protected const float SPEED_STARS = 20.0f;
 		protected const float SPEED_SHIP = 75.0f;
+		protected const float SPEED_METEOR = 40.0f;
 
 		// reference our spaceship
 		protected Texture2D texShip;
@@ -34,8 +35,14 @@ namespace SpaceGame
 		// screen resolution
 		protected Rectangle rectViewBounds = Rectangle.Empty;
 
-		// NEW: player bounds
+		// player bounds
 		protected Rectangle rectPlayerBounds = Rectangle.Empty;
+
+		// NEW: reference to meteors
+		protected List<Texture2D> texMeteors = new List<Texture2D> ();
+
+		// NEW: our meteors' locations
+		protected List<Vector3> locMeteors = new List<Vector3> ();
 
         public SpaceGame()
         {
@@ -66,28 +73,41 @@ namespace SpaceGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			// load our spaceship image
-			texShip = Content.Load<Texture2D> ("playerShip1_red");
+			texShip = Content.Load<Texture2D> ("ship/playerShip1_red");
 
 			// load our space background
 			texStars = Content.Load<Texture2D> ("purple");
 
+			// NEW: load our meteors
+			texMeteors.Add (Content.Load<Texture2D> ("meteor/meteorBrown_big1"));
+			texMeteors.Add (Content.Load<Texture2D> ("meteor/meteorBrown_big2"));
+			texMeteors.Add (Content.Load<Texture2D> ("meteor/meteorBrown_big3"));
+			texMeteors.Add (Content.Load<Texture2D> ("meteor/meteorBrown_big4"));
+
 			// screen bounds
 			rectViewBounds = graphics.GraphicsDevice.Viewport.Bounds;
 
-			// NEW: player bounds
+			// player bounds
 			rectPlayerBounds = rectViewBounds;
 			rectPlayerBounds.X = 10;
 			rectPlayerBounds.Width = rectViewBounds.Width - 10 * 2;
 			rectPlayerBounds.Y = rectViewBounds.Height / 3;
 			rectPlayerBounds.Height = rectViewBounds.Height - rectPlayerBounds.Top - 10;
 
-			// NEW: start ship at center, bottom of screen
+			// start ship at center, bottom of screen
 			locShip.X = rectViewBounds.Width / 2 - texShip.Bounds.Width / 2;
 			locShip.Y = rectViewBounds.Height - texShip.Bounds.Height - 10.0f;
 
 			// start stars off screen
 			locStars.Y = -texStars.Bounds.Height;
         }
+
+		// NEW: time between meteor creation
+		protected const float METEOR_DELAY = 3.0f;
+		protected float meteorElapsed = METEOR_DELAY;
+
+		// NEW: random meteor placement
+		protected Random rand = new Random ();
 
         protected override void Update(GameTime gameTime)
         {
@@ -106,7 +126,7 @@ namespace SpaceGame
 				locShip.X += dX * SPEED_SHIP * elapsed;
 				locShip.Y -= dY * SPEED_SHIP * elapsed;
 
-				// NEW: keep ship in bounds (Horizontal)
+				// keep ship in bounds (Horizontal)
 				var maxX = rectPlayerBounds.Right - texShip.Bounds.Width;
 				if (locShip.X < rectPlayerBounds.X) {
 					locShip.X = rectPlayerBounds.X;
@@ -114,7 +134,7 @@ namespace SpaceGame
 					locShip.X = maxX;
 				}
 
-				// NEW: keep ship in bounds (Vertical)
+				// keep ship in bounds (Vertical)
 				var maxY = rectPlayerBounds.Bottom - texShip.Bounds.Height;
 				if (locShip.Y < rectPlayerBounds.Y) {
 					locShip.Y = rectPlayerBounds.Y;
@@ -127,6 +147,28 @@ namespace SpaceGame
 				if (locStars.Y >= 0.0f) {
 					locStars.Y = -texStars.Bounds.Height;
 				}
+
+				// NEW: add a new meteor?
+				meteorElapsed += elapsed;
+				if (meteorElapsed >= METEOR_DELAY) {
+					var meteorWidth = texMeteors [0].Bounds.Width;
+					var meteorHeight = texMeteors [0].Bounds.Height;
+					var randX = rand.Next(rectPlayerBounds.Width - meteorWidth);
+					var loc = 
+						new Vector3 (
+							rectPlayerBounds.Left + randX,
+							1 - meteorHeight,
+							rand.Next(texMeteors.Count));
+					locMeteors.Add (loc);
+					meteorElapsed = 0.0f;
+				}
+
+				// NEW: update existing meteors
+				for (int i = 0; i < locMeteors.Count; i++) {
+					var loc = locMeteors [i];
+					loc.Y += elapsed * SPEED_METEOR;
+					locMeteors [i] = loc;
+				}
 			}
             base.Update(gameTime);
         }
@@ -136,7 +178,7 @@ namespace SpaceGame
 			graphics.GraphicsDevice.Clear (Color.CornflowerBlue);
 			spriteBatch.Begin ();
 
-			// NEW: draw our space image at current location, filling screen
+			// draw our space image at current location, filling screen
 			var loc = locStars;
 			while (loc.Y < rectViewBounds.Bottom) {
 				loc.X = 0.0f;
@@ -149,6 +191,16 @@ namespace SpaceGame
 
 			// draw our spaceship image at current location
 			spriteBatch.Draw (texShip, locShip, Color.White);
+
+			// NEW: draw meteors
+			for (int i = 0; i < locMeteors.Count; i++) {
+				var locMeteor = locMeteors [i];
+				var iTexture = (int)locMeteor.Z;
+				spriteBatch.Draw (
+					texMeteors[iTexture], 
+					new Vector2(locMeteor.X, locMeteor.Y), 
+					Color.White);
+			}
 
 			spriteBatch.End ();
 			base.Draw (gameTime);
