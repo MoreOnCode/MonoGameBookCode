@@ -46,7 +46,7 @@ namespace SpaceGame
 
 		public override void FinishedLaunching (UIApplication app)
 		{
-			game = new PlatformerGame();
+			game = new SpaceGame();
 			game.Run();
 		}
 
@@ -65,10 +65,10 @@ namespace SpaceGame
 		static void Main()
 		{
 		#if WINDOWS || LINUX || PSM
-			using (var game = new PlatformerGame())
+			using (var game = new SpaceGame())
 			game.Run();
 		#else
-			var factory = new MonoGame.Framework.GameFrameworkViewSource<PlatformerGame>();
+			var factory = new MonoGame.Framework.GameFrameworkViewSource<SpaceGame>();
 			Windows.ApplicationModel.Core.CoreApplication.Run(factory);
 		#endif
 		}
