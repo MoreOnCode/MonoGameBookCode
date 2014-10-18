@@ -65,13 +65,13 @@
     <Reference Include="System.Drawing" />
     <Reference Include="MonoMac" />
     <Reference Include="Lidgren.Network">
-      <HintPath>libs\Lidgren.Network.dll</HintPath>
+      <HintPath>libs_OSX\Lidgren.Network.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
-      <HintPath>libs\MonoGame.Framework.dll</HintPath>
+      <HintPath>libs_OSX\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Tao.Sdl">
-      <HintPath>libs\Tao.Sdl.dll</HintPath>
+      <HintPath>libs_OSX\Tao.Sdl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
