@@ -93,7 +93,7 @@ namespace SpaceGame
 				DisplayOrientation.LandscapeLeft | 
 				DisplayOrientation.LandscapeRight;
 
-			GamePadEx.KeyboardPlayerIndex = PlayerIndex.One;
+			//GamePadEx.KeyboardPlayerIndex = PlayerIndex.One;
         }
 
         protected override void LoadContent()

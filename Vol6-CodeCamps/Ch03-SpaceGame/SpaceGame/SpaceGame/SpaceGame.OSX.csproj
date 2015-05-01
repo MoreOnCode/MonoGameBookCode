@@ -10,6 +10,7 @@
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
     <AssemblyName>SpaceGame</AssemblyName>
     <SuppressXamMacMigration>True</SuppressXamMacMigration>
+    <StartupObject>SpaceGame.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -63,15 +64,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
-    <Reference Include="MonoMac" />
-    <Reference Include="Lidgren.Network">
-      <HintPath>libs_OSX\Lidgren.Network.dll</HintPath>
-    </Reference>
+    <Reference Include="MonoMac, Version=0.0.0.0, Culture=neutral" />
     <Reference Include="MonoGame.Framework">
       <HintPath>libs_OSX\MonoGame.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Tao.Sdl">
-      <HintPath>libs_OSX\Tao.Sdl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -84,53 +79,91 @@
     <Folder Include="Content\enemy\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainWindow.cs" />
-    <Compile Include="MainWindowController.cs" />
-    <Compile Include="MainWindow.designer.cs">
-      <DependentUpon>MainWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="Main.cs" />
-    <Compile Include="AppDelegate.cs" />
-    <Compile Include="AppDelegate.designer.cs">
-      <DependentUpon>AppDelegate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Game.cs" />
     <Compile Include="MoreOnCode\Util\PlatformHelper.cs" />
     <Compile Include="MoreOnCode\Input\GamePadCapabilitiesEx.cs" />
     <Compile Include="MoreOnCode\Input\GamePadEx.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <InterfaceDefinition Include="MainWindow.xib" />
-    <InterfaceDefinition Include="MainMenu.xib" />
+    <Compile Include="AppDelegate.cs" />
+    <Compile Include="MainWindow.cs" />
+    <Compile Include="MainWindowController.cs" />
+    <Compile Include="AppDelegate.designer.cs" />
+    <Compile Include="MainWindow.designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Content Include="Content\purple.png" />
-    <Content Include="Content\ship\laserRed01.png" />
-    <Content Include="Content\ship\playerShip1_damage1.png" />
-    <Content Include="Content\ship\playerShip1_damage2.png" />
-    <Content Include="Content\ship\playerShip1_damage3.png" />
-    <Content Include="Content\ship\playerShip1_red.png" />
-    <Content Include="Content\ship\shield1.png" />
-    <Content Include="Content\meteor\meteorBrown_big1.png" />
-    <Content Include="Content\meteor\meteorBrown_big2.png" />
-    <Content Include="Content\meteor\meteorBrown_big3.png" />
-    <Content Include="Content\meteor\meteorBrown_big4.png" />
-    <Content Include="Content\meteor\meteorBrown_med1.png" />
-    <Content Include="Content\meteor\meteorBrown_med3.png" />
-    <Content Include="Content\meteor\meteorBrown_small1.png" />
-    <Content Include="Content\meteor\meteorBrown_small2.png" />
-    <Content Include="Content\meteor\meteorBrown_tiny1.png" />
-    <Content Include="Content\meteor\meteorBrown_tiny2.png" />
-    <Content Include="Content\enemy\enemyBlack1.png" />
-    <Content Include="Content\enemy\enemyBlack2.png" />
-    <Content Include="Content\enemy\enemyBlack3.png" />
-    <Content Include="Content\enemy\laserBlue01.png" />
+    <Content Include="Content\purple.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ship\laserRed01.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ship\playerShip1_damage1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ship\playerShip1_damage2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ship\playerShip1_damage3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ship\playerShip1_red.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ship\shield1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\meteor\meteorBrown_big1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\meteor\meteorBrown_big2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\meteor\meteorBrown_big3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\meteor\meteorBrown_big4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\meteor\meteorBrown_med1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\meteor\meteorBrown_med3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\meteor\meteorBrown_small1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\meteor\meteorBrown_small2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\meteor\meteorBrown_tiny1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\meteor\meteorBrown_tiny2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\enemy\enemyBlack1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\enemy\enemyBlack2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\enemy\enemyBlack3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\enemy\laserBlue01.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\LogoOnly.icns" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="MainMenu.xib" />
+    <InterfaceDefinition Include="MainWindow.xib" />
   </ItemGroup>
 </Project>

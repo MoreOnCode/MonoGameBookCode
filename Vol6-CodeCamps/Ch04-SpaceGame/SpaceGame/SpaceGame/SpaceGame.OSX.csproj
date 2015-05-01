@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{948B3504-5B70-4649-8FE4-BDE1FB46EC69};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{F30875A0-040B-41F0-9064-78803C9A9421}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SpaceGame</RootNamespace>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <AssemblyName>SpaceGame</AssemblyName>
+    <SuppressXamMacMigration>True</SuppressXamMacMigration>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;MONOMAC;OPENGL;OPENAL;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <UseSGen>false</UseSGen>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CreatePackage>false</CreatePackage>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <LinkMode>SdkOnly</LinkMode>
+    <UseSGen>false</UseSGen>
+    <IncludeMonoRuntime>true</IncludeMonoRuntime>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <CodeSigningKey>Developer ID Application</CodeSigningKey>
+    <EnableCodeSigning>true</EnableCodeSigning>
+    <CreatePackage>true</CreatePackage>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\AppStore</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <LinkMode>SdkOnly</LinkMode>
+    <UseSGen>false</UseSGen>
+    <IncludeMonoRuntime>true</IncludeMonoRuntime>
+    <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+    <CreatePackage>true</CreatePackage>
+    <CodeSigningKey>3rd Party Mac Developer Application</CodeSigningKey>
+    <EnableCodeSigning>true</EnableCodeSigning>
+    <EnablePackageSigning>true</EnablePackageSigning>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="MonoMac" />
+    <Reference Include="Lidgren.Network">
+      <HintPath>libs\Lidgren.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>libs\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Sdl">
+      <HintPath>libs\Tao.Sdl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+    <Folder Include="MoreOnCode\" />
+    <Folder Include="Content\" />
+    <Folder Include="Content\meteor\" />
+    <Folder Include="Content\ship\" />
+    <Folder Include="Content\enemy\" />
+    <Folder Include="MoreOnCode\Screens\" />
+    <Folder Include="MoreOnCode\Xna.Framework\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MainWindow.cs" />
+    <Compile Include="MainWindowController.cs" />
+    <Compile Include="MainWindow.designer.cs">
+      <DependentUpon>MainWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main.cs" />
+    <Compile Include="AppDelegate.cs" />
+    <Compile Include="AppDelegate.designer.cs">
+      <DependentUpon>AppDelegate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Game.cs" />
+    <Compile Include="MoreOnCode\Util\PlatformHelper.cs" />
+    <Compile Include="MoreOnCode\Screens\Screen.cs" />
+    <Compile Include="MoreOnCode\Screens\ScreenManager.cs" />
+    <Compile Include="MoreOnCode\Xna.Framework\Input\GamePadCapabilitiesEx.cs" />
+    <Compile Include="MoreOnCode\Xna.Framework\Input\GamePadEx.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="MainWindow.xib" />
+    <InterfaceDefinition Include="MainMenu.xib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Content Include="Content\purple.png" />
+    <Content Include="Content\ship\laserRed01.png" />
+    <Content Include="Content\ship\playerShip1_damage1.png" />
+    <Content Include="Content\ship\playerShip1_damage2.png" />
+    <Content Include="Content\ship\playerShip1_damage3.png" />
+    <Content Include="Content\ship\playerShip1_red.png" />
+    <Content Include="Content\ship\shield1.png" />
+    <Content Include="Content\meteor\meteorBrown_big1.png" />
+    <Content Include="Content\meteor\meteorBrown_big2.png" />
+    <Content Include="Content\meteor\meteorBrown_big3.png" />
+    <Content Include="Content\meteor\meteorBrown_big4.png" />
+    <Content Include="Content\meteor\meteorBrown_med1.png" />
+    <Content Include="Content\meteor\meteorBrown_med3.png" />
+    <Content Include="Content\meteor\meteorBrown_small1.png" />
+    <Content Include="Content\meteor\meteorBrown_small2.png" />
+    <Content Include="Content\meteor\meteorBrown_tiny1.png" />
+    <Content Include="Content\meteor\meteorBrown_tiny2.png" />
+    <Content Include="Content\enemy\enemyBlack1.png" />
+    <Content Include="Content\enemy\enemyBlack2.png" />
+    <Content Include="Content\enemy\enemyBlack3.png" />
+    <Content Include="Content\enemy\laserBlue01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\LogoOnly.icns" />
+  </ItemGroup>
+</Project>

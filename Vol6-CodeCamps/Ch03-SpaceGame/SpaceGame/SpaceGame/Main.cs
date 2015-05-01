@@ -29,8 +29,8 @@ namespace SpaceGame
 
 		public override void FinishedLaunching (MonoMac.Foundation.NSObject notification)
 		{
-			game = new SpaceGame();
-			game.Run();
+			game = new SpaceGame ();
+			game.Run ();
 		}
 
 		public override bool ApplicationShouldTerminateAfterLastWindowClosed (NSApplication sender)
@@ -64,7 +64,10 @@ namespace SpaceGame
 	{
 		static void Main()
 		{
-		#if WINDOWS || LINUX || PSM
+		#if WINDOWS || LINUX || PSM || MONOMAC_NOT
+			#if MONOMAC
+			NSApplication.Init();
+			#endif
 			using (var game = new SpaceGame())
 			game.Run();
 		#else
